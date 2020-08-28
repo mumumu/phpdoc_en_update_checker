@@ -1,7 +1,7 @@
-## PHPDoc English version temporarily update checker.
+## phpdoc English version temporarily update checker.
 
-You can check phpDoc English version update history and notify it via E-Mail.
-This is **temporary** workaround until svn.php.net mail infrastructure go back.
+You can check [phpdoc English version](https://github.com/php/doc-en/) update history and notify it via E-Mail.
+This is **temporary** workaround until svn.php.net mail infrastructure come back.
 
 ## Requirement
 
@@ -38,4 +38,5 @@ $ php /path/to/phpdoc_en_update_checker.php
 
 ## Contributing
 
-We does not use many of PHPMailer functionality, such as SMTP Auth and so on. Patches welcome.
+- We does not use many of PHPMailer functionality, such as SMTP Auth and so on. Patches welcome.
+- We does not confirm whether this works on Windows, Patches welcome, too.
