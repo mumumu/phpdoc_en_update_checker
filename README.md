@@ -1,4 +1,4 @@
-## phpdoc English version temporarily update checker.
+## phpdoc English version temporary update checker.
 
 You can check [phpdoc English version](https://github.com/php/doc-en/) update history and notify it via E-Mail.
 This is **temporary** workaround until svn.php.net mail infrastructure come back.
