@@ -1,0 +1,18 @@
+{
+    "name": "mumumu/phpdoc_en_update_checker",
+    "description": "PHP English Documentaton update checker",
+    "type": "project",
+    "require": {
+        "phpmailer/phpmailer": "^6.1"
+    },
+    "require-dev": {
+        "phpmailer/phpmailer": "^6.1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yoshinari Takaoka",
+            "email": "mumumu@mumumu.org"
+        }
+    ]
+}
