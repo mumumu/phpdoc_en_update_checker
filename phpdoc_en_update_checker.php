@@ -6,6 +6,14 @@ use PHPMailer\PHPMailer\Exception;
 
 require_once "vendor/autoload.php";
 
+
+$config = array(
+    'tmpdir' => '/tmp',
+    'server' => 'localhost:25',
+    'To' => 'foo@example.com',
+    'From' => 'noreply@example.com',
+);
+
 class MailEntry {
     public $title;
     public $patch;
@@ -13,17 +21,11 @@ class MailEntry {
     public $author;
 }
 
-$config = array(
-    'server' => 'localhost:25',
-    'To' => 'foo@example.com',
-    'From' => 'noreply@example.com',
-);
-
 function send_email(MailEntry $mailentry) {
     global $config;
 
     $mailer = new PHPMailer(true);
-    $tmpfile = tempnam("/tmp", "phpen_doc_checker");
+    $tmpfile = tempnam($config['tmpdir'], "phpen_doc_checker");
     file_put_contents($tmpfile, $mailentry->patch);
     try {
         $mailer->IsSMTP();
@@ -44,7 +46,6 @@ function process_feed(object $entries, DateTime $filter_last_updated) {
     foreach($entries as $entry) {
         $entry_updated = new DateTime($entry->updated);
         if ($entry_updated > $filter_last_updated) {
-            //echo "Update!!:" . $entry_updated->format("c") . " -> " . $filter_last_updated->format("c") . "\n";
             $author = "";
             $author_name = (string)$entry->author->name;
             $author_email = (string)$entry->author->email;
@@ -69,22 +70,28 @@ function process_feed(object $entries, DateTime $filter_last_updated) {
     }
 }
 
-$feed = file_get_contents("https://github.com/php/doc-en/commits/master.atom");
-$cache_path = "/tmp/.phpdoc_en_feed_cache";
-$feedxml = new SimpleXMLElement($feed);
-$last_updated = $feedxml->updated;
-$feed_last_updated = new DateTime($last_updated);
+function main() {
+    global $config;
 
-if (file_exists($cache_path)) {
-    $cached_last_updated = new DateTime(file_get_contents($cache_path));
-    if ($feed_last_updated > $cached_last_updated) {
-        process_feed($feedxml->entry, $cached_last_updated);
+    $feed = file_get_contents("https://github.com/php/doc-en/commits/master.atom");
+    $cache_path = $config['tmpdir'] . DIRECTORY_SEPARATOR . '.phpdoc_en_feed_cache';
+    $feedxml = new SimpleXMLElement($feed);
+    $last_updated = $feedxml->updated;
+    $feed_last_updated = new DateTime($last_updated);
+
+    if (file_exists($cache_path)) {
+        $cached_last_updated = new DateTime(file_get_contents($cache_path));
+        if ($feed_last_updated > $cached_last_updated) {
+            process_feed($feedxml->entry, $cached_last_updated);
+        } else {
+            // lastest feed. exiting...
+            exit(1);
+        }
     } else {
-        //echo "lastest feed. exiting...\n";
-        exit(1);
+        $dummy_old_last_updated = new DateTime("1970-01-01T00:00:00Z");
+        process_feed($feedxml->entry, $dummy_old_last_updated);
     }
-} else {
-    $dummy_old_last_updated = new DateTime("1970-01-01T00:00:00Z");
-    process_feed($feedxml->entry, $dummy_old_last_updated);
+    file_put_contents($cache_path, $last_updated);
 }
-file_put_contents($cache_path, $last_updated);
+
+main();

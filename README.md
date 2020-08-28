@@ -24,6 +24,7 @@ You can change the following setting on `phpdoc_en_update_checker.php`.
 
 ```
 $config = array(
+    'tmpdir' => '/tmp',
     'server' => 'localhost:25',
     'To' => 'foo@example.com',
     'From' => 'noreply@example.com',
@@ -38,5 +39,8 @@ $ php /path/to/phpdoc_en_update_checker.php
 
 ## Contributing
 
-- We does not use many of PHPMailer functionality, such as SMTP Auth and so on. Patches welcome.
-- We does not confirm whether this works on Windows, Patches welcome, too.
+We have the following TODO. Patches welcome.
+
+- SMTP Auth
+- send to Gmail
+- etc...
