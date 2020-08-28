@@ -13,7 +13,7 @@ This is **temporary** workaround until svn.php.net mail infrastructure come back
 ## Installation
 
 ```
-$ git clone git@github.com:mumumu/phpdoc_en_update_checker.git
+$ git clone https://github.com/mumumu/phpdoc_en_update_checker.git
 $ cd phpdoc_en_update_checker
 $ composer install
 ```
