@@ -33,7 +33,7 @@ function send_email(MailEntry $mailentry) {
         $mailer->addAddress($config['To']);
         $mailer->setFrom($config['From'], $mailentry->author);
         $mailer->addAttachment($tmpfile, 'patch.txt');
-        $mailer->Subject = "[DOC-CVS] " . trim(str_replace("…", "", $mailentry->title));
+        $mailer->Subject = "[DOC-CVS] " . trim($mailentry->title);
         $mailer->Body = $mailentry->body;
         $mailer->send();
     } catch (Exception $e) {
@@ -57,10 +57,14 @@ function process_feed(object $entries, DateTime $filter_last_updated) {
                 }
             }
             $mailentry = new MailEntry();
-            $mailentry->title = (string)$entry->title;
             $patch = file_get_contents(
                 (string)$entry->link["href"] . ".patch"
             );
+            if (preg_match("/.PATCH. (.+)git-svn-id/s", $patch, $matches)) {
+                $mailentry->title = $matches[1];
+            } else {
+                $mailentry->title = (string)$entry->title;
+            }
             $mailentry->patch = $patch;
             $mailentry->body = join("\n", array_slice(explode("\n", $patch), 5));
             $mailentry->author = $author;
