@@ -33,7 +33,7 @@ function send_email(MailEntry $mailentry) {
         $mailer->addAddress($config['To']);
         $mailer->setFrom($config['From'], $mailentry->author);
         $mailer->addAttachment($tmpfile, 'patch.txt');
-        $mailer->Subject = "[DOC-CVS] " . trim($mailentry->title);
+        $mailer->Subject = "[DOC-CVS] " . trim(str_replace("…", "", $mailentry->title));
         $mailer->Body = $mailentry->body;
         $mailer->send();
     } catch (Exception $e) {
