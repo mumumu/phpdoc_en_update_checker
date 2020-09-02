@@ -60,7 +60,7 @@ function process_feed(object $entries, DateTime $filter_last_updated) {
             $patch = file_get_contents(
                 (string)$entry->link["href"] . ".patch"
             );
-            if (preg_match("/.PATCH. (.+)git-svn-id/s", $patch, $matches)) {
+            if (preg_match("/.PATCH. (.+)\n/", $patch, $matches)) {
                 $mailentry->title = $matches[1];
             } else {
                 $mailentry->title = (string)$entry->title;
