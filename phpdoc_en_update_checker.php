@@ -19,6 +19,7 @@ class MailEntry {
     public $patch;
     public $body;
     public $author;
+    public $date;
 }
 
 function send_email(MailEntry $mailentry) {
@@ -35,6 +36,7 @@ function send_email(MailEntry $mailentry) {
         $mailer->addAttachment($tmpfile, 'patch.txt');
         $mailer->Subject = "[DOC-CVS] " . trim($mailentry->title);
         $mailer->Body = $mailentry->body;
+        $mailer->MessageDate = $mailentry->date;
         $mailer->send();
     } catch (Exception $e) {
         echo "Message could not be sent. Mailer Error: {$mailer->ErrorInfo}\n";
@@ -68,6 +70,8 @@ function process_feed(object $entries, DateTime $filter_last_updated) {
             $mailentry->patch = $patch;
             $mailentry->body = join("\n", array_slice(explode("\n", $patch), 5));
             $mailentry->author = $author;
+            $entry_updated = new DateTime($entry->updated);
+            $mailentry->date = $entry_updated->format("D, d M y H:i:s O");
 
             send_email($mailentry);
         }
